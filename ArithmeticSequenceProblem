@@ -1,0 +1,55 @@
+"""
+Problem:
+09,27,45,63,81
+There are several increasing arithmetic sequences of five positive 2-digit integers using, between them, the digits 0 to 9 once each. Above is one example, with a sum of 225.
+What is the total of the sums of all such sequences?
+"""
+
+# Function to get digits of a number as a list of characters
+def get_digits(number):
+    return list(str(number).zfill(2))  # Add leading zero for single-digit numbers
+
+# Function to check if a given sequence uses each digit 0-9 exactly once
+def uses_all_digits_once(seq):
+    digits = []  # List to store all digits in the sequence
+    for num in seq:
+        digits.extend(get_digits(num))  # Append digits of each number to the list
+    
+    # Check if the list contains exactly 10 digits, all unique, and includes '0'
+    return len(set(digits)) == 10 and '0' in digits
+
+# Main function to find and sum all valid sequences
+def find_sequences():
+    total_sum = 0  # To keep track of the sum of all valid sequences
+    sequences = []  # To store valid sequences
+
+    # Loop through all possible starting numbers (0 to 98)
+    for a in range(0, 98 + 1):
+        # Loop through possible common differences d
+        for d in range(1, (98 + 1 - a) // 4 + 1):
+            # Generate the sequence: a, a + d, a + 2d, a + 3d, a + 4d
+            seq = [a, a + d, a + 2 * d, a + 3 * d, a + 4 * d]
+
+            # Check if this sequence uses digits 0-9 exactly once
+            if uses_all_digits_once(seq):
+                # Calculate the sum of this sequence
+                seq_sum = sum(seq)
+                
+                # Print and store the valid sequence with leading zeros
+                formatted_seq = []  # Initialize an empty list for formatted numbers
+                for num in seq:  # Format each number to 2 digits
+                    formatted_seq.append(str(num).zfill(2))  # Append formatted number
+                
+                print(f"Valid sequence: {formatted_seq}, Sum: {seq_sum}\n")
+                sequences.append(seq)
+
+                # Add the sum to the total sum
+                total_sum += seq_sum
+
+    return total_sum, sequences
+
+# Call the function and display all valid sequences and their sums
+total, valid_sequences = find_sequences()
+
+# Finally, print the total sum of all valid sequences
+print(f"Total sum of all valid sequences: {total}")
